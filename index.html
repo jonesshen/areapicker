@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
+<meta content="webkit" name="renderer" />
+<title>AreaPicker of Layui</title>
+<link href="layui/css/layui.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div style="padding: 30px;">
+  <div class="layui-form">
+    <!--HTML-->
+    <div class="layui-form-item" id="area-picker"></div>
+    <!--HTML-->
+  </div>
+</div>
+<script src="layui/layui.js"></script>
+<script>
+layui.config({
+    base: 'mods/',
+    version: true
+}).use('areaPicker', function() {
+    var $ = layui.$,
+        layer = layui.layer,
+        areaPicker = layui.areaPicker,
+        loadid = 0;
+
+    $.ajax({
+        url: 'json/data.json',
+        type: 'get',
+        dataType: 'json',
+        beforeSend: function() {
+            loadid = layer.load(2);
+        },
+        success: function(data) {
+            <!--JS-->
+            areaPicker.set({
+                provList: data.province,
+                cityList: data.city,
+                distList: data.district,
+                streList: data.street,
+            }).render({
+                elem: '#area-picker',
+                data: {
+                    provId: 11,
+                    cityId: 179,
+                    distId: 2177,
+                    streId: 15951,
+                },
+                level: 4,
+                label: '地址',
+                width: 200,
+                form: {
+                    provName: 'province',
+                    cityName: 'city',
+                    distName: 'district',
+                    streName: 'street',
+                },
+                callback: function(result) {
+                    console.log(result);
+                }
+            });
+            <!--JS-->
+        },
+        error: function() {
+            layer.msg('网络异常，请稍后重试');
+        },
+        complete: function() {
+            layer.close(loadid);
+        }
+    });
+});
+</script>
+</body>
+</html>
